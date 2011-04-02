@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JOGL Glue Generator Base
+Bundle-SymbolicName: org.jogamp.gluegen.base
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Lance Feagan
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

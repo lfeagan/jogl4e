@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.jogamp.gluegen.linux.x86_64
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: %providerName
+Fragment-Host: org.jogamp.gluegen;bundle-version="[1.0.0,2.0.0)"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
