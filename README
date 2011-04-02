@@ -1,0 +1,13 @@
+jogl4e
+
+JOGL for Eclipse
+
+Description:
+jogl4e bundles JOGL's JAR and shared-objects into plug-ins and fragments to simplify multi-platform deployment.
+
+At present, bundles supporting Linux and Mac OS X are available.
+
+License:
+
+Apache License v2.0
+
