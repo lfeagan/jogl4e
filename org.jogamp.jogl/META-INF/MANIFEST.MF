@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
-Eclipse-ExtensibleAPI: true
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-SymbolicName: org.jogamp.jogl;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-ExtensibleAPI: true
 Export-Package: com.jogamp.gluegen.runtime.opengl,
  com.jogamp.graph.curve,
  com.jogamp.graph.curve.opengl,
