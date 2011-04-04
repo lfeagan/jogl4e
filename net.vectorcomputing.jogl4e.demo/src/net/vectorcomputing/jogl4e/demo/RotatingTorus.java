@@ -63,11 +63,16 @@ public class RotatingTorus {
 			sinTheta = sinTheta1;
 		}
 	}
+	
+	public static boolean isVBOSupported(GL gl) {
+		final boolean VBOsupported = gl.isFunctionAvailable("glGenBuffersARB")
+        	&& gl.isFunctionAvailable("glBindBufferARB")
+        	&& gl.isFunctionAvailable("glBufferDataARB")
+        	&& gl.isFunctionAvailable("glDeleteBuffersARB");
+		return VBOsupported;
+	}
 
 	public static void main(String[] args) {
-		System.out.println("running");
-		System.out.flush();
-		
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
 		shell.setText("SWT/JOGL Rotating Torus Example");
@@ -86,6 +91,8 @@ public class RotatingTorus {
 		GLProfile glprofile = GLProfile.getDefault();
 		
 		final GLContext context = GLDrawableFactory.getFactory(glprofile).createExternalGLContext();
+		
+		System.out.println("extensions: " + context.getGLExtensionsString());
 
 		glcanvas.addListener(SWT.Resize, new Listener() {
 			public void handleEvent(Event event) {
@@ -114,6 +121,8 @@ public class RotatingTorus {
 		gl.glLineWidth(2);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		context.release();
+
+		System.out.println("VBSupported: " + isVBOSupported(gl));
 		
 		shell.open();
 
