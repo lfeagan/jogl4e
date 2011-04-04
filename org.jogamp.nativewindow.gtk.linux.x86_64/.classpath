@@ -5,7 +5,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="/org.jogamp.nativewindow.base/nativewindow.all-noawt.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="org.jogamp.nativewindow.gtk.linux.x86_64/native"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="org.jogamp.nativewindow.gtk.linux.x86_64"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
