@@ -72,7 +72,7 @@ public class RotatingTorus {
 		final Shell shell = new Shell(display);
 		shell.setText("SWT/JOGL Rotating Torus Example");
 		shell.setLayout(new FillLayout());
-		shell.setSize(1920, 1200);
+		shell.setSize(800, 600);
 		
 		final Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayout(new FillLayout());
