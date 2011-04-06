@@ -37,6 +37,100 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
 public class RotatingTorus {
+	
+	public static void main(String[] args) {
+		final Display display = new Display();
+		final Shell shell = new Shell(display);
+		shell.setText("SWT/JOGL Rotating Torus Example");
+		shell.setLayout(new FillLayout());
+		shell.setSize(800, 600);
+		
+		final Composite composite = new Composite(shell, SWT.NONE);
+		composite.setLayout(new FillLayout());
+		
+		GLData gldata = new GLData();
+		gldata.doubleBuffer = true;
+		
+		final GLCanvas glcanvas = new GLCanvas(composite, SWT.NO_BACKGROUND, gldata);
+		glcanvas.setCurrent();
+
+		GLProfile glprofile = GLProfile.getDefault();
+		
+		final GLContext context = GLDrawableFactory.getFactory(glprofile).createExternalGLContext();
+		
+		glcanvas.addListener(SWT.Resize, new Listener() {
+			public void handleEvent(Event event) {
+				Rectangle bounds = glcanvas.getBounds();
+				float fAspect = (float) bounds.width / (float) bounds.height;
+				glcanvas.setCurrent();
+				context.makeCurrent();
+				GL2 gl = context.getGL().getGL2();
+				gl.glViewport(0, 0, bounds.width, bounds.height);
+				gl.glMatrixMode(GL2.GL_PROJECTION);
+				gl.glLoadIdentity();
+				GLU glu = new GLU();
+				glu.gluPerspective(45.0f, fAspect, 0.5f, 400.0f);
+				gl.glMatrixMode(GL2.GL_MODELVIEW);
+				gl.glLoadIdentity();
+				context.release();
+			}
+		});
+
+		context.makeCurrent();
+		GL2 gl = context.getGL().getGL2();
+		
+		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		gl.glColor3f(1.0f, 0.0f, 0.0f);
+		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+		gl.glClearDepth(1.0);
+		gl.glLineWidth(2);
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		context.release();
+
+		System.out.println("extensions");
+		String[] extensions = ExtensionUtils.getExtensions(gl);
+		for (String extension : extensions) {
+			System.out.println(extension);
+		}
+		
+		System.out.println("VBSupported: " + VBOUtils.isVBOSupported(gl));
+		
+		shell.open();
+
+		display.asyncExec(new Runnable() {
+			int rot = 0;
+
+			public void run() {
+				if (!glcanvas.isDisposed()) {
+					glcanvas.setCurrent();
+					context.makeCurrent();
+					GL2 gl = context.getGL().getGL2();
+					gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+					gl.glClearColor(.3f, .5f, .8f, 1.0f);
+					gl.glLoadIdentity();
+					gl.glTranslatef(0.0f, 0.0f, -10.0f);
+					float frot = rot/5.0f;
+					gl.glRotatef(0.15f * frot, 2.0f * frot, 10.0f * frot, 1.0f);
+					gl.glRotatef(0.3f * frot, 3.0f * frot, 1.0f * frot, 1.0f);
+					rot++;
+					gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
+					gl.glColor3f(0.9f, 0.9f, 0.9f);
+					drawTorus(gl, 1, 1.9f + ((float) Math.sin((0.004f * frot))), 15, 15);
+					glcanvas.swapBuffers();
+					context.release();
+					display.asyncExec(this);
+					//System.out.println("rot:" + rot);
+				}
+			}
+		});
+
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+	}
+	
 	static void drawTorus(GL2 gl, float r, float R, int nsides, int rings) {
 		float ringDelta = 2.0f * (float) Math.PI / rings;
 		float sideDelta = 2.0f * (float) Math.PI / nsides;
@@ -62,100 +156,5 @@ public class RotatingTorus {
 			cosTheta = cosTheta1;
 			sinTheta = sinTheta1;
 		}
-	}
-	
-	public static boolean isVBOSupported(GL gl) {
-		final boolean VBOsupported = gl.isFunctionAvailable("glGenBuffersARB")
-        	&& gl.isFunctionAvailable("glBindBufferARB")
-        	&& gl.isFunctionAvailable("glBufferDataARB")
-        	&& gl.isFunctionAvailable("glDeleteBuffersARB");
-		return VBOsupported;
-	}
-
-	public static void main(String[] args) {
-		final Display display = new Display();
-		final Shell shell = new Shell(display);
-		shell.setText("SWT/JOGL Rotating Torus Example");
-		shell.setLayout(new FillLayout());
-		shell.setSize(800, 600);
-		
-		final Composite composite = new Composite(shell, SWT.NONE);
-		composite.setLayout(new FillLayout());
-		
-		GLData gldata = new GLData();
-		gldata.doubleBuffer = true;
-		
-		final GLCanvas glcanvas = new GLCanvas(composite, SWT.NO_BACKGROUND, gldata);
-		glcanvas.setCurrent();
-
-		GLProfile glprofile = GLProfile.getDefault();
-		
-		final GLContext context = GLDrawableFactory.getFactory(glprofile).createExternalGLContext();
-		
-		System.out.println("extensions: " + context.getGLExtensionsString());
-
-		glcanvas.addListener(SWT.Resize, new Listener() {
-			public void handleEvent(Event event) {
-				Rectangle bounds = glcanvas.getBounds();
-				float fAspect = (float) bounds.width / (float) bounds.height;
-				glcanvas.setCurrent();
-				context.makeCurrent();
-				GL2 gl = context.getGL().getGL2();
-				gl.glViewport(0, 0, bounds.width, bounds.height);
-				gl.glMatrixMode(GL2.GL_PROJECTION);
-				gl.glLoadIdentity();
-				GLU glu = new GLU();
-				glu.gluPerspective(45.0f, fAspect, 0.5f, 400.0f);
-				gl.glMatrixMode(GL2.GL_MODELVIEW);
-				gl.glLoadIdentity();
-				context.release();
-			}
-		});
-
-		context.makeCurrent();
-		GL2 gl = context.getGL().getGL2();
-		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		gl.glColor3f(1.0f, 0.0f, 0.0f);
-		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
-		gl.glClearDepth(1.0);
-		gl.glLineWidth(2);
-		gl.glEnable(GL.GL_DEPTH_TEST);
-		context.release();
-
-		System.out.println("VBSupported: " + isVBOSupported(gl));
-		
-		shell.open();
-
-		display.asyncExec(new Runnable() {
-			int rot = 0;
-
-			public void run() {
-				if (!glcanvas.isDisposed()) {
-					glcanvas.setCurrent();
-					context.makeCurrent();
-					GL2 gl = context.getGL().getGL2();
-					gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-					gl.glClearColor(.3f, .5f, .8f, 1.0f);
-					gl.glLoadIdentity();
-					gl.glTranslatef(0.0f, 0.0f, -10.0f);
-					float frot = rot;
-					gl.glRotatef(0.15f * rot, 2.0f * frot, 10.0f * frot, 1.0f);
-					gl.glRotatef(0.3f * rot, 3.0f * frot, 1.0f * frot, 1.0f);
-					rot++;
-					gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2.GL_LINE);
-					gl.glColor3f(0.9f, 0.9f, 0.9f);
-					drawTorus(gl, 1, 1.9f + ((float) Math.sin((0.004f * frot))), 15, 15);
-					glcanvas.swapBuffers();
-					context.release();
-					display.asyncExec(this);
-				}
-			}
-		});
-
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
 	}
 }
