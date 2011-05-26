@@ -6,4 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.swt;bundle-version="[3.3.0,4.0.0)",
  org.jogamp.jogl;bundle-version="[1.0.0,2.0.0)",
- com.ibm.arcs.basic;bundle-version="1.0.0"
+ net.vectorcomputing.base.string;bundle-version="1.0.0"
